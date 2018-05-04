@@ -18,6 +18,10 @@ use Model\MovieManager;
 */
 class BeastController extends AbstractController
 {
+    #for validating needed fields for update as for insert
+    const REQUIRED_FIELDS_FOR_VALIDATION = [
+        'name', 'picture', 'size', 'area', 'id_movie', 'id_planet'
+    ];
 
   /**
   * Display item listing
@@ -40,11 +44,16 @@ class BeastController extends AbstractController
   */
     public function details(int $id)
     {
-      // TODO : A page which displays all details of a specific beasts
         $beastManager = new BeastManager();
         $beast = $beastManager->selectOneById($id);
 
-        return $this->twig->render('Beast/details.html.twig', [ 'beast' => $beast ]);
+        try{
+            return $this->twig->render('Beast/details.html.twig', [ 'beast' => $beast ]);
+        } catch (\Exception $e) {
+//TODO: format that as a correct html page
+            echo $e->getMessage();
+            exit;
+        }
     }
 
   /**
@@ -54,12 +63,58 @@ class BeastController extends AbstractController
   */
     public function add()
     {
-      // TODO : A creation page where your can add a new beast.
+        $beastManager = new BeastManager();
 
-        return $this->twig->render('Beast/add.html.twig');
+        if (isset($_POST) && ( 0 !== count($_POST))) {
+ var_dump($_POST);
+ echo "●●●<br>";
+
+            $error = false;
+            $datas = [];
+
+            foreach (static::REQUIRED_FIELDS_FOR_VALIDATION as $field) {
+                if ( !isset( $_POST[$field]) ) {
+//TODO: format that as a correct html page
+                    $error = true;
+                    echo "Les données renvoyée par POST sont incomplètes&nbsp;: manque " . $field;
+                } else {
+                    $datas[$field] = $_POST[$field];
+                }
+            }
+
+            if ($error) {
+                exit;
+            }
+
+            $res = false;
+            try {
+                $res = $beastManager->insertAndReturnId($datas);
+            } catch (\Exception $e) {
+//TODO: format that as a correct html page
+                echo "Erreur de création&nbsp;: " . $e->getMessage();
+                exit;
+            }
+
+            if (false !== $res) {
+//TODO: add a "done!" message in top of page
+                header('Location: ' . '/beasts/' . $res);
+                exit;
+            } else {
+//TODO: format that as a correct html page
+                echo "Problème d'insertion";
+                exit;
+//TODO: should return to the creation page
+            }
+
+
+        } else {
+
+            return $this->twig->render('Beast/add.html.twig');
+        }
     }
+
   /**
-  * Display item creation page
+  * Display item edition page
   *
   * @return string
   */
