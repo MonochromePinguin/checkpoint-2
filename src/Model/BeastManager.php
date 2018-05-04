@@ -19,6 +19,7 @@ class BeastManager extends AbstractManager
 
     public function __construct()
     {
+        Beast::initStatics();
         parent::__construct(self::TABLE);
     }
 }

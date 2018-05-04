@@ -10,6 +10,8 @@
 namespace Controller;
 
 use Model\BeastManager;
+use Model\PlanetManager;
+use Model\MovieManager;
 
 /**
 * Class ItemController
@@ -22,12 +24,12 @@ class BeastController extends AbstractController
   *
   * @return string
   */
-  public function list()
-  {
-    $beastsManager = new BeastManager();
-    $beasts = $beastsManager->selectAll();
-    return $this->twig->render('Beast/list.html.twig', ['beasts' => $beasts]);
-  }
+    public function list()
+    {
+        $beastManager = new BeastManager();
+        $beasts = $beastManager->selectAll();
+        return $this->twig->render('Beast/list.html.twig', ['beasts' => $beasts]);
+    }
 
   /**
   * Display item informations specified by $id
@@ -36,32 +38,34 @@ class BeastController extends AbstractController
   *
   * @return string
   */
-  public function details(int $id)
-  {
-    // TODO : A page which displays all details of a specific beasts.
+    public function details(int $id)
+    {
+      // TODO : A page which displays all details of a specific beasts
+        $beastManager = new BeastManager();
+        $beast = $beastManager->selectOneById($id);
 
-    return $this->twig->render('Beast/details.html.twig');
-  }
+        return $this->twig->render('Beast/details.html.twig', [ 'beast' => $beast ]);
+    }
 
   /**
   * Display item creation page
   *
   * @return string
   */
-  public function add()
-  {
-    // TODO : A creation page where your can add a new beast.
+    public function add()
+    {
+      // TODO : A creation page where your can add a new beast.
 
-    return $this->twig->render('Beast/add.html.twig');
-  }
+        return $this->twig->render('Beast/add.html.twig');
+    }
   /**
   * Display item creation page
   *
   * @return string
   */
-  public function edit()
-  {
-    // TODO : An edition page where your can add a new beast.
-    return $this->twig->render('Beast/edit.html.twig');
-  }
+    public function edit()
+    {
+      // TODO : An edition page where your can add a new beast.
+        return $this->twig->render('Beast/edit.html.twig');
+    }
 }

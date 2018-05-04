@@ -35,16 +35,22 @@ abstract class AbstractManager
         $this->className = __NAMESPACE__ . '\\' . ucfirst($table);
     }
 
+
     /**
-     * Get all row from database.
-     *
-     * @return array
-     */
-    public function selectAll(): array
+    * Get all row from database.
+    * @param string|null $orderBy give an optional "ORDER BY" parameter to the SQL query
+    * @return array
+    */
+    public function selectAll($orderBy = null): array
     {
-        return $this->pdoConnection->query("SELECT * FROM `$this->table`")
-            ->fetchAll(\PDO::FETCH_CLASS, $this->className);
+        return $this->pdoConnection->query(
+            'SELECT * FROM ' . $this->table
+            . (isset($orderBy) ? ' ORDER BY `' . substr($this->pdoConnection->quote($orderBy), 1, -1) . '`' : ''),
+            \PDO::FETCH_CLASS,
+            $this->className
+        )->fetchAll();
     }
+
 
     /**
      * Get one row from database by ID.
