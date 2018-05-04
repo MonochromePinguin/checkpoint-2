@@ -1,0 +1,102 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Welcome here Padawan !</h1>
+            <p>On this day of <a href="https://en.wikipedia.org/wiki/Star_Wars_Day">May 4th</a>, your today's challenge
+                will be about Star Wars universe.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>General instructions</h2>
+            <ol>
+                <li>Your code has to respect good practices and especially PSR-1 and PSR-2. <em>N.B.: Codesniffer is
+                        registered as a dev dependency in this project.</em></li>
+                <li>You have to push your code on this project repository. Do it on a branch with your firstname and
+                    lastname as *Arthur_DUPOND*. Think about atomic commits
+                </li>
+                <li>All the app is already designed. Focus on code, not decoration !
+                    If you really <strong>need</strong> to change something in Twig, of course, you can.
+                </li>
+                <li>You work for yourself, if you need help, you can ask to your trainer.</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>1. Algorithm exercise</h2>
+            <p>In <samp>src/Service/String.php</samp> you have to write code wich have the same behavior as PHP native
+                function <samp>ltrim()</samp>.
+                In PHP manual, it's described as :
+            <blockquote cite="http://php.net/manual/en/function.ltrim.php">
+                <strong>ltrim</strong> — Strip whitespace (or other characters) from the beginning of a string
+                <a href="http://php.net/manual/en/function.ltrim.php" target="_blank">see more</a>
+            </blockquote>
+            <p>
+                All your code must be contained in <samp>trimWhiteSpaces()</samp> method.
+                You are not allowed to use regular expressions and of course
+                <em>you can't use <samp>ltrim()</samp> function itself and all of trim familly as
+                    <samp>trim()</samp>.</em>
+                In this checkpoint we only want you to code the basic usage of this function :
+                <strong>removing useless white spaces before a string.</strong>. So ignore the second optionnal
+                parameter of the native ltrim function.
+                When you'll want to test your code, you can run in command lines :
+                <code class="block">
+                    ./vendor/bin/phpunit tests/Service/StringToolsTest
+                </code>
+                If all tests are OK, you can consider your mission acomplished.
+                You can commit your work and push it on your remote branch.
+            </p>
+        </div>
+
+        <div class="col-12">
+            <h2>2. Application development</h2>
+            Your next mission is to finish the back end part of a Star Wars Wiki. Main routes are availables from the
+            burger menu in navbar above.
+            You can read instructions below to know what we are expecting from you :
+            <ol>
+                <li>
+                    <del>A page which display all beasts from data base. All list items display a link to the beast's
+                        details page.
+                    </del>
+                    <em>Already done !</em>
+                </li>
+                <li>A page which displays all details of a specific beast, with all information about him :
+                    everything contained in the beast table.
+                    <a target="_blank" href="https://dev.mysql.com/doc/refman/5.7/en/join.html">#joins</a>
+                </li>
+                <li>The details page also have to display the planet where she/he comes from and in which movies she/he
+                    can be seen. Those information are contained in other tables.
+                </li>
+                <li>A creation page where your can add a new beast, and give informations about : the planet where
+                    she/he comes from, movies where she/he can be seen.
+                </li>
+                <li>An edition page where your can edit a selected beast, and update informations about : the planet
+                    where
+                    she/he comes from, movies where she/he can be seen.
+                </li>
+                <li>On the edition page, you can find a delete button, which allow you to remove a beast from the
+                    database.
+                </li>
+                <li>On creation page, planets list and movies list are coming from database.
+                    <em>You're right, a beast could be seen in multiple movies. But in this exercice we allow only one movie per beast.</em>
+                </li>
+                <li>A page which display all planets from database.</li>
+                <li>A page which display all movies from database.</li>
+            </ol>
+            <p>If you want to test if all routes are OK, you can try the code below. Your favorite trainer will use this
+                to check if all routes are working :
+                <code class="block">
+                    ./vendor/bin/phpunit tests/AppTest.php
+                </code>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <img src="/assets/images/May_the_4th_be_with_you_(Star_Wars_Day).gif" alt="may the force be with you"/>
+        </div>
+    </div>
+{% endblock %}
