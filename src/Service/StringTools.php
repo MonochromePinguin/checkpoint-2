@@ -8,9 +8,17 @@ namespace Service;
 class StringTools
 {
 
+    /**
+     * Simulate the basic funtionality of ltrim() function
+     * @param string $str the string to trim
+     * @return string
+     */
     public static function trimWhiteSpaces(string $str):string
     {
-        //TODO Write your code here,
-        //TODO And return something at the end...
+        $p = 0;
+        while (in_array($str[$p++], [' ', ' ', "\t", "\n", "\v"])) {
+        }
+        echo \substr($str, $p);
+        return \substr($str, $p -1);
     }
 }
