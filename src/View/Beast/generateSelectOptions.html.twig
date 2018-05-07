@@ -1,0 +1,27 @@
+{# generate option list for a select.#}
+{# acceded variables:
+    ?selectedEntries[]  an array,
+                        containing null or equal to null if nothing is already selected
+    invite  the partial text to invite to select a value
+    list    a list of [id, label] associative arrays, one per option
+#}
+{% block generateSelectOptions %}
+    <option disabled {% if selectedEntries is null or selectedEntries[0] is null %}selected{% endif %}>
+        Choisir {{ invite }} ...
+    </option>
+
+    {% for entry in list %}
+        <option value="{{ entry.id }}" {% if entry.id in selectedEntries %}selected{% endif %}>
+            {{ entry.label }}
+        </option>
+    {% endfor %}
+
+    {% if inviteCreate is defined %}
+        <option value="créer...">
+            créer {{ inviteCreate }} ...
+        </option>
+    {% endif %}
+
+{% endblock %}
+
+

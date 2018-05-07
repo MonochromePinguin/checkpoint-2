@@ -4,6 +4,24 @@
     <div class="row">
         <h1 class="col-12">Add a new beast</h1>
     </div>
+
+
+    {% if messages|length > 0 %}
+        <div class="row danger">
+            <p class="col-12">
+                Erreurs rencontrées&nbsp;:
+            </p>
+        </div>
+
+        {% for msg in messages %}
+            <div class="row danger">
+                <p class="col-12">
+                    {{ msg }}
+                </p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="row">
         <div class="col-12">
             {% include 'Beast/_form.html.twig' %}

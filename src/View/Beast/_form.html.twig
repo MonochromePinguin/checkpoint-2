@@ -1,39 +1,43 @@
+
 <form method="post">
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="title">Name :</label>
-            <input type="text" class="form-control" name="name">
+            <input type="text" class="form-control" name="name"
+                   value="{{ datas.name }}"required>
         </div>
         <div class="form-group col-md-6">
             <label for="area">Area :</label>
-            <input type="text" class="form-control" name="area">
+            <input type="text" class="form-control" name="area"
+                   value="{{ datas.area }}" required>
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="area">Picture :</label>
-            <input type="url" class="form-control" name="picture" id="picture"/>
+            <input type="url" class="form-control" name="picture" id="picture"
+                   value="{{ datas.picture }}" required>
         </div>
         <div class="form-group col-md-6">
             <label for="size">Size (in meter):</label>
-            <input type="text" class="form-control" name="size" id="size"/>
+            <input type="text" class="form-control" name="size" id="size"
+                    value="{{ datas.size }}" required>
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="planet">Planet :</label>
-            <select name="planet" class="custom-select" id="planet">
-                <option value="Planet">Planet name</option>
-                <option value="Planet">Planet name</option>
-                <option value="Planet">Planet name</option>
+            <select name="id_planet" class="custom-select" id="planet" required>
+                {% set invite, selectedEntries, list = 'une planète', [ datas.id_planet ], planetList %}
+                {% include 'Beast/generateSelectOptions.html.twig' %}
             </select>
         </div>
         <div class="form-group col-md-6">
             <label for="movies">Movie :</label>
-            <select name="movies[]" class="custom-select" id="movies" multiple>
-                <option value="Movie">Movie title</option>
-                <option value="Movie">Movie title</option>
-                <option value="Movie">Movie title</option>
+            <select name="id_movie_list[]" class="custom-select" id="movies" multiple
+                    required>
+                {% set invite, selectedEntries, list = 'un film', datas.id_movie_list, movieList %}
+                {% include 'Beast/generateSelectOptions.html.twig' %}
             </select>
         </div>
     </div>

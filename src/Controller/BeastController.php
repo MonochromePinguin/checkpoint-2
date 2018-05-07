@@ -20,7 +20,7 @@ class BeastController extends AbstractController
 {
     #for validating needed fields for update as for insert
     const REQUIRED_FIELDS_FOR_VALIDATION = [
-        'name', 'picture', 'size', 'area', 'id_movie', 'id_planet'
+        'name', 'picture', 'size', 'area', 'id_movie_list', 'id_planet'
     ];
 
   /**
@@ -32,7 +32,16 @@ class BeastController extends AbstractController
     {
         $beastManager = new BeastManager();
         $beasts = $beastManager->selectAll();
-        return $this->twig->render('Beast/list.html.twig', ['beasts' => $beasts]);
+        try {
+            return $this->twig->render('Beast/list.html.twig', ['beasts' => $beasts]);
+        } catch (\Exception $e) {
+            return \generateEmergencyPage(
+                'Erreur inattendue',
+                [ 'Une exception est survenue pendant la génération de la page',
+                    $e->getMessage()
+                ]
+            );
+        }
     }
 
   /**
@@ -48,11 +57,15 @@ class BeastController extends AbstractController
         $beast = $beastManager->selectOneById($id);
 
         try{
-            return $this->twig->render('Beast/details.html.twig', [ 'beast' => $beast ]);
+            return $this->twig->render(
+                'Beast/details.html.twig',
+                [ 'beast' => $beast ]
+            );
         } catch (\Exception $e) {
-//TODO: format that as a correct html page
-            echo $e->getMessage();
-            exit;
+            return \generateEmergencyPage(
+                'Exception survenue pendant la génération de la page',
+                [$e->getMessage()]
+            );
         }
     }
 
@@ -63,61 +76,127 @@ class BeastController extends AbstractController
   */
     public function add()
     {
-        $beastManager = new BeastManager();
+        $planets = (new PlanetManager())->selectAll('name');
+        $movies = (new MovieManager())->selectAll('id');
+
+        $errors = [];   #list of error messages to show in the page
+        $errFlag = false;
+
+        $datas = [      #datas to put into the form inputs
+            'name' => null,
+            'picture' => null,
+            'size' => null,
+            'area' => null,
+            'id_movie_list' => null,
+            'id_planet' => null
+    ];
 
         if (isset($_POST) && ( 0 !== count($_POST))) {
- var_dump($_POST);
- echo "●●●<br>";
-
-            $error = false;
-            $datas = [];
 
             foreach (static::REQUIRED_FIELDS_FOR_VALIDATION as $field) {
                 if ( !isset( $_POST[$field]) ) {
-//TODO: format that as a correct html page
-                    $error = true;
-                    echo "Les données renvoyée par POST sont incomplètes&nbsp;: manque " . $field;
+                    $errors[] = 'Champs « ' . $field . ' » manquant';
+                    $errFlag = true;
                 } else {
                     $datas[$field] = $_POST[$field];
                 }
             }
 
-            if ($error) {
-                exit;
+            if (!$errFlag) {
+                if (!self::validateId($datas['id_planet'], $planets)) {
+                    $errors[] = 'Id de planète invalide';
+                    $errFlag = true;
+                }
+            }
+/*Pour commit : d'abord marcher avec une seule planète ...'
+ on retrouve une liste de films, mais UN SEUL peut être inséré en SQL→ modifier
+ la structure : Créer une table intermédiaire ... et le signaler ... Dans le code ...
+_ le select planète doit afficher «sélectionner ...» car test twig bogue avec tbl ?*/
+
+            if (!$errFlag) {
+                foreach($datas['id_movie_list'] as $id_movie) {
+                    if (!self::validateId( $id_movie, $movies)) {
+                        $errors[] = 'Id de film invalide';
+                        $errFlag = true;
+                        break;
+                    }
+                }
             }
 
-            $res = false;
-            try {
-                $res = $beastManager->insertAndReturnId($datas);
-            } catch (\Exception $e) {
-//TODO: format that as a correct html page
-                echo "Erreur de création&nbsp;: " . $e->getMessage();
-                exit;
+            if (!$errFlag) {
+                $beastManager = new BeastManager($planets, $movies);
+
+                $res = false;
+                try {
+                    $res = $beastManager->insertAndReturnId($datas);
+                } catch (\Exception $e) {
+                    $errors[] = $e->getMessage();
+                }
+
+                if (false !== $res) {
+                    //TODO: add a "done!" message in top of page
+                    header('Location: ' . '/beasts/' . $res);
+                    exit;
+                } else {
+                    //TODO: format that as a correct html page
+                    $errors[] = "Problème d'insertion des données ...";
+                }
             }
+        }
 
-            if (false !== $res) {
-//TODO: add a "done!" message in top of page
-                header('Location: ' . '/beasts/' . $res);
-                exit;
-            } else {
-//TODO: format that as a correct html page
-                echo "Problème d'insertion";
-                exit;
-//TODO: should return to the creation page
-            }
+        #build lists of associative arrays [ 'id', 'title' ]
+        # for creating selects options in twig
+        $planetList = [];
+        foreach( $planets as $planet) {
+            $planetList[] = [ 'id' => $planet->getId(), 'label' => $planet->getName() ];
+        }
 
+        $movieList = [];
+        foreach( $movies as $movie) {
+            $movieList[] = [ 'id' => $movie->getId(), 'label' => $movie->getTitle() ];
+        }
 
-        } else {
-
-            return $this->twig->render('Beast/add.html.twig');
+        try {
+            return $this->twig->render(
+                'Beast/add.html.twig',
+                [
+                    'messages' => $errors,
+                    'planetList' => $planetList,
+                    'movieList' => $movieList,
+                    'datas' => $datas
+                ]
+            );
+        } catch (\Exception $e) {
+               return \generateEmergencyPage(
+                    'Exception survenue pendant la génération de la page',
+                    [$e->getMessage()]);
         }
     }
 
-  /**
-  * Display item edition page
-  *
-  * @return string
-  */
+
+    /**
+     * verify that an id belongs to an object in the given list
+     *   – use object->getId()
+     * @param int $id
+     * @param array $objects
+     */
+    private static function validateId(int $id, array $objects)
+    {
+        foreach($objects as $object) {
+            if ($id === $object->getId())
+                return true;
+        }
+
+        return false;
+    }
+
+
+
+    /**
+    * Display item edition page
+    *
+    * @return string
+    */
     public function edit()
     {
       // TODO : An edition page where your can add a new beast.
