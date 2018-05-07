@@ -20,11 +20,10 @@ class BeastController extends AbstractController
 {
     #for validating needed fields for update as for insert
     const REQUIRED_FIELDS_FOR_VALIDATION = [
-        'name', 'picture', 'size', 'area', 'id_movie_list', 'id_planet'
+        'name', 'picture', 'size', 'area', 'id_movie', 'id_planet'
     ];
 
-  /**
-  * Display item listing
+  /*** Display item listing
   *
   * @return string
   */
@@ -87,7 +86,7 @@ class BeastController extends AbstractController
             'picture' => null,
             'size' => null,
             'area' => null,
-            'id_movie_list' => null,
+            'id_movie' => null,
             'id_planet' => null
     ];
 
@@ -114,12 +113,9 @@ class BeastController extends AbstractController
 _ le select planète doit afficher «sélectionner ...» car test twig bogue avec tbl ?*/
 
             if (!$errFlag) {
-                foreach($datas['id_movie_list'] as $id_movie) {
-                    if (!self::validateId( $id_movie, $movies)) {
-                        $errors[] = 'Id de film invalide';
-                        $errFlag = true;
-                        break;
-                    }
+                if (!self::validateId( $datas['id_movie'], $movies)) {
+                    $errors[] = 'Id de film invalide';
+                    $errFlag = true;
                 }
             }
 

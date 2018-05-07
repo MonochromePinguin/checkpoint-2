@@ -35,7 +35,7 @@ class BeastManager extends AbstractManager
         $query->bindValue(':picture', $values['picture'], \PDO::PARAM_STR);
         $query->bindValue(':size', $values['size'], \PDO::PARAM_INT);
         $query->bindValue(':area', $values['area'], \PDO::PARAM_STR);
-        $query->bindValue(':id_movie', $values['id_movie_list'][0], \PDO::PARAM_INT);
+        $query->bindValue(':id_movie', $values['id_movie'], \PDO::PARAM_INT);
         $query->bindValue(':id_planet', $values['id_planet'], \PDO::PARAM_INT);
 
         return $query->execute();

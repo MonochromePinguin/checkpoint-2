@@ -31,3 +31,10 @@
         <a href="/beasts">Back</a>
     </div>
 {% endblock %}
+
+
+{% block javascript %}
+    {{ parent() }}
+
+    <script src="/js/BeastEdition.js" async></script>
+{% endblock %}
