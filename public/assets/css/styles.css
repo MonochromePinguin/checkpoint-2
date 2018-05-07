@@ -252,3 +252,7 @@ nav.row {
 .navbar {
     background-color: #FFD200;
 }
+
+.modal-content {
+    background-color: black;
+}

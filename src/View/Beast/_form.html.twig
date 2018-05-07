@@ -47,3 +47,51 @@
         </div>
     </div>
 </form>
+
+
+{# this block is used to ask for new planet creation #}
+{# ● BAD PRACTICE: IT WON'T WORK WITHOUT JS ... ● #}
+<div class="modal fade bg-dark" id="planet-creation-dialog" tabindex="-1"
+     role="dialog" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title">
+                    Créer une nouvelle planète
+                </h1>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <label>Nom&nbsp;:
+                    <input id="new-planet-name">
+                </label>
+            </div>
+
+            <div class="modal-footer container-fluid">
+                <div class="row">
+
+                    <button class="m-1 p-1 col btn" id="new-planet-send-btn"
+                            title="Créer une nouvelle entrée de planète (bouton désactivé avant entrée d'un nom)"
+                            disabled>
+                        Envoyer
+                    </button>
+
+                    <button type="button" id="new-planet-cancel-btn"
+                            class="m-1 p-1 col btn"
+                            data-dismiss="modal" aria-label="Close">
+                        Annuler
+                    </button>
+
+                </div> <!-- .row -->
+            </div> <!--.modal-footer -->
+
+        </div> <!-- .modal-content -->
+
+    </div> <!-- .modal-dialog -->
+</div>
