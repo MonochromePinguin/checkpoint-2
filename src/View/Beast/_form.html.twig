@@ -4,30 +4,42 @@
         <div class="form-group col-md-6">
             <label for="title">Name :</label>
             <input type="text" class="form-control" name="name"
+                   title="Beast name"
                    value="{{ datas.name }}"required>
+            <span></span>
         </div>
         <div class="form-group col-md-6">
             <label for="area">Area :</label>
             <input type="text" class="form-control" name="area"
+                   title="Place where the beast is found"
                    value="{{ datas.area }}" required>
+            <span></span>
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="area">Picture :</label>
+            <label for="picture">Picture :</label>
             <input type="url" class="form-control" name="picture" id="picture"
+                   title="an URL to an image for the beast"
                    value="{{ datas.picture }}" required>
+            <span></span>
         </div>
         <div class="form-group col-md-6">
             <label for="size">Size (in meter):</label>
             <input type="text" class="form-control" name="size" id="size"
-                    value="{{ datas.size }}" required>
+                   placeholder="Beast size in meter – any positive size"
+                   {# no type="number" attribute – the "pattern" attribute
+                      seems more flexible to me #}
+                   pattern="\d+((\.|,)\d+)?"
+                   value="{{ datas.size }}" required>
+            <span></span>
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="planet">Planet :</label>
-            <select name="id_planet" class="custom-select" id="planet" required>
+            <select name="id_planet" class="custom-select" id="planet"
+                    title="Planet the beast originate from" required>
                 {% set invite, selectedEntry, list, inviteCreate = 'une planète', datas.id_planet, planetList, 'Nouvelle planète ...' %}
                 {% include 'Beast/generateSelectOptions.html.twig' %}
             </select>
@@ -35,6 +47,8 @@
         <div class="form-group col-md-6">
             <label for="movies">Movie :</label>
             <select name="id_movie" class="custom-select" id="movies"
+{# TODO: IN A FUTURE VERSION, THIS SHOULD SUPPORT MULTIPLE MOVIES #}
+                    title="1st movie the beast in encountered"
                     required>
                 {% set invite, selectedEntry, list, inviteCreate = 'un film', datas.id_movie, movieList, null %}
                 {% include 'Beast/generateSelectOptions.html.twig' %}
@@ -51,6 +65,7 @@
 
 {# this block is used to ask for new planet creation #}
 {# ● BAD PRACTICE: IT WON'T WORK WITHOUT JS ... ● #}
+{# TODO: CREATE THE NO-JS VERSION OF THIS FORM #}
 <div class="modal fade bg-dark" id="planet-creation-dialog" tabindex="-1"
      role="dialog" aria-hidden="true">
 
