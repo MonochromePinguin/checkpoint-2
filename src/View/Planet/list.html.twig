@@ -6,7 +6,8 @@
 </div>
 <div class="row">
   <ul class="list">
-    <li>Planet id.   Planet Name</li>
+    {% set list = planets %}
+    {% include 'generateList.html.twig' %}
   </ul>
 </div>
 <nav class="row">

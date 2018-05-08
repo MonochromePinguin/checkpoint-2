@@ -1,11 +1,4 @@
 <?php
-/**
-* Created by PhpStorm.
-* User: wcs
-* Date: 11/10/17
-* Time: 16:07
-* PHP version 7
-*/
 
 namespace Controller;
 
@@ -55,7 +48,7 @@ class BeastController extends AbstractController
         $beastManager = new BeastManager();
         $beast = $beastManager->selectOneById($id);
 
-        try{
+        try {
             return $this->twig->render(
                 'Beast/details.html.twig',
                 [ 'beast' => $beast ]
@@ -88,12 +81,11 @@ class BeastController extends AbstractController
             'area' => null,
             'id_movie' => null,
             'id_planet' => null
-    ];
+        ];
 
         if (isset($_POST) && ( 0 !== count($_POST))) {
-
             foreach (static::REQUIRED_FIELDS_FOR_VALIDATION as $field) {
-                if ( !isset( $_POST[$field]) ) {
+                if (!isset($_POST[$field])) {
                     $errors[] = 'Champs « ' . $field . ' » manquant';
                     $errFlag = true;
                 } else {
@@ -113,7 +105,7 @@ class BeastController extends AbstractController
 _ le select planète doit afficher «sélectionner ...» car test twig bogue avec tbl ?*/
 
             if (!$errFlag) {
-                if (!self::validateId( $datas['id_movie'], $movies)) {
+                if (!self::validateId($datas['id_movie'], $movies)) {
                     $errors[] = 'Id de film invalide';
                     $errFlag = true;
                 }
@@ -143,12 +135,12 @@ _ le select planète doit afficher «sélectionner ...» car test twig bogue ave
         #build lists of associative arrays [ 'id', 'title' ]
         # for creating selects options in twig
         $planetList = [];
-        foreach( $planets as $planet) {
+        foreach ($planets as $planet) {
             $planetList[] = [ 'id' => $planet->getId(), 'label' => $planet->getName() ];
         }
 
         $movieList = [];
-        foreach( $movies as $movie) {
+        foreach ($movies as $movie) {
             $movieList[] = [ 'id' => $movie->getId(), 'label' => $movie->getTitle() ];
         }
 
@@ -164,8 +156,9 @@ _ le select planète doit afficher «sélectionner ...» car test twig bogue ave
             );
         } catch (\Exception $e) {
                return \generateEmergencyPage(
-                    'Exception survenue pendant la génération de la page',
-                    [$e->getMessage()]);
+                   'Exception survenue pendant la génération de la page',
+                   [$e->getMessage()]
+               );
         }
     }
 
@@ -178,9 +171,10 @@ _ le select planète doit afficher «sélectionner ...» car test twig bogue ave
      */
     private static function validateId(int $id, array $objects)
     {
-        foreach($objects as $object) {
-            if ($id === $object->getId())
+        foreach ($objects as $object) {
+            if ($id === $object->getId()) {
                 return true;
+            }
         }
 
         return false;

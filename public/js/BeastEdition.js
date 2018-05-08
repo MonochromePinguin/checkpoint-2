@@ -50,9 +50,7 @@ $(document).ready( function(){
 
     //on click, send a request to add a new planet through AJAX
     $sendBtn.click( function() {
-        $dialog.modal('hide');
-
-        $.get( '/planets/ajax?createNew ' + $planetName.val(''),
+         $.get( '/planets/ajax?createNew ' + $planetName.val(''),
                 function(data, status){
             alert("Data: " + data + "\nStatus: " + status);
         });

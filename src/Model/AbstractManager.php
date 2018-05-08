@@ -37,18 +37,32 @@ abstract class AbstractManager
 
 
     /**
-    * Get all row from database.
-    * @param string|null $orderBy give an optional "ORDER BY" parameter to the SQL query
-    * @return array
-    */
+     * Get a list of the given property (column) of all entries.
+     * @param $prop             name of the column to select
+     * @param string|null $orderBy give an optional "ORDER BY" parameter to the SQL query
+     * @return array    an array of string
+     */
+    public function getListOf(string $prop, $orderBy = null): array
+    {
+        $query = $this->pdoConnection->query(
+            'SELECT `' . substr($this->pdoConnection->quote($prop), 1, -1)
+            . '` FROM ' . static::TABLE
+            . (isset($orderBy) ? ' ORDER BY `' . substr($this->pdoConnection->quote($orderBy), 1, -1) . '`'
+                : '' )
+        );
+
+        return $query->fetchAll(\PDO::FETCH_COLUMN, $prop);
+    }
+
+
+    /**
+     * Get all row from database.
+     * @param string|null $orderBy give an optional "ORDER BY" parameter to the SQL query
+     * @return array
+     */
     public function selectAll($orderBy = null): array
     {
-        return $this->pdoConnection->query(
-            'SELECT * FROM ' . $this->table
-            . (isset($orderBy) ? ' ORDER BY `' . substr($this->pdoConnection->quote($orderBy), 1, -1) . '`' : ''),
-            \PDO::FETCH_CLASS,
-            $this->className
-        )->fetchAll();
+        return $this->pdoConnection->query('SELECT * FROM ' . $this->table . (isset($orderBy) ? ' ORDER BY `' . substr($this->pdoConnection->quote($orderBy), 1, -1) . '`' : ''), \PDO::FETCH_CLASS, $this->className)->fetchAll();
     }
 
 

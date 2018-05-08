@@ -50,8 +50,9 @@ class BeastManager extends AbstractManager
      */
     public function insertAndReturnId(array $values)
     {
-        if (!$this->insert($values))
+        if (!$this->insert($values)) {
             return false;
+        }
 
 
         $query = $this->pdoConnection->query('SELECT LAST_INSERT_ID()');

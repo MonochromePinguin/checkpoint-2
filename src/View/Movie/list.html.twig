@@ -7,8 +7,8 @@
 
     <div class="row">
         <ul class="list">
-            {# movies #}
-            <li>Movie title</li>
+            {% set list = movies %}
+            {% include 'generateList.html.twig' %}
         </ul>
     </div>
 
