@@ -22,6 +22,7 @@ class BeastController extends AbstractController
     */
     public function list()
     {
+#TODO: ADD "SORT BY" BUTTONS AND CODE FOR CLIENT-SIDE LIST SORTING
         $beastManager = new BeastManager();
         try {
             $beasts = $beastManager->selectAll();

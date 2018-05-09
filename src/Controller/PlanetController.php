@@ -21,7 +21,7 @@ class PlanetController extends AbstractController
      *          500 → internal server error ...
      *      • 'id' → the id of the new planet. Valid if statusCode 200
      *      • 'newPlanetList' → an indexed array of ['id', 'name'] assoc
- *                                arrays, one per planet. Valif if status 200
+     *                           arrays, one per planet. Valif if status 200
      *      • 'message'   → an explicative error message. Valid if status != 200
      */
     public function ajaxAddNew()
@@ -98,9 +98,10 @@ class PlanetController extends AbstractController
      */
     public function list()
     {
+#TODO: ADD "SORT BY" BUTTONS AND CODE FOR CLIENT-SIDE LIST SORTING
         $planetManager = new PlanetManager();
         try {
-            $planets = $planetManager->getListOf('name');
+            $planets = $planetManager->getListOf('name', 'name');
 
             return $this->twig->render('Planet/list.html.twig', ['planets' => $planets]);
         } catch (\Exception $e) {
