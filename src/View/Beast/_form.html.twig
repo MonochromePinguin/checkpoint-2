@@ -81,12 +81,25 @@
                 </button>
             </div>
 
-            <div class="modal-body">
-                <label>Nom&nbsp;:
-                    <input id="new-planet-name" required
-                           title="entrez ici le nom de la nouvelle planète">
-                </label>
-            </div>
+            <div class="modal-body container-fluid">
+                <div class="row">
+                {# the entire row content is handled by JS #}
+                    <div id="spinner">
+                    </div>
+
+                    <p id="ajax-message">
+                    </p>
+                </div>
+
+                <div class="row">
+                    <label class="col">
+                        Nom&nbsp;:
+                        <input id="new-planet-name" required
+                               title="entrez ici le nom de la nouvelle planète">
+                    </label>
+                </div>
+
+            </div> {# .modal-body.container-fluid #}
 
             <div class="modal-footer container-fluid">
                 <div class="row">

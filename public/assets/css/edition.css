@@ -1,0 +1,35 @@
+
+input:invalid {
+    background: hotpink;
+}
+
+input:invalid + span:after {
+    content: "⚠ absent or invalid input";
+    color: red;
+}
+
+#spinner {
+    display: none;
+    border: 0.2em solid yellow;
+    border-top: 0.2em solid lightgray;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    animation: spin 2s linear infinite;
+}
+
+#ajax-message {
+    border: 1px solid red;
+    border-radius: 0.2em;
+
+    color: red;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

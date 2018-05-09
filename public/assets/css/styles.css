@@ -256,11 +256,3 @@ nav.row {
 .modal-content {
     background-color: black;
 }
-
-input:invalid {
-    background: hotpink;
-}
-input:invalid + span:after {
-    content: "⚠ absent or invalid input";
-    color: red;
-}

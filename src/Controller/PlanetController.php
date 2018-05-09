@@ -27,7 +27,7 @@ class PlanetController extends AbstractController
     public function ajaxAddNew()
     {
         if (( 0 === count($_POST))
-            || empty($_POST['planetToCreate']) ||true
+            || empty($_POST['planetToCreate'])
         ) {
             header('Content-Type: application/json');
             echo json_encode([ 'status' => 404, 'message' => 'requête mal formée' ]);
@@ -56,7 +56,15 @@ class PlanetController extends AbstractController
             }
 
             $id = $planetManager->insertAndReturnId([ 'name' => $name ]);
-            $res = $planetManager->getListOf('name', 'name');
+            $res = array_map(
+                function($planet) {
+                   return [
+                       'id' => $planet->getId(),
+                       'name' => $planet->getName()
+                   ];
+                },
+                $planetManager->selectAll('name')
+            );
 
             if ($id && ($res != null)) {
                 #planet created successfuly
@@ -64,7 +72,7 @@ class PlanetController extends AbstractController
                 $response['status'] = 201;
 
                 #we need to send back a new planet list
-                $response['newList'] = $res;
+                $response['newPlanetList'] = $res;
             } else {
                 #planet creation not successful: return an error code
                 $response['message'] = 'Erreur interne au serveur lors de la création de la planète';

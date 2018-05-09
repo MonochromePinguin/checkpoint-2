@@ -2,10 +2,14 @@
 the "new beast" page and add some interactivity */
 
 $(document).ready( function(){
+
     $planetSelector = $('#planet');
     $dialog = $('#planet-creation-dialog');
     $planetName = $('#new-planet-name');
     $sendBtn = $('#new-planet-send-btn');
+
+    $spinner = $('#spinner');
+    $ajaxMessage = $('#ajax-message');
 
 
     function inhibitSendBtn() {
@@ -14,12 +18,17 @@ $(document).ready( function(){
     }
 
 
-    // hide the dialog and clear the input field on cancel
+    //hide the dialog, clear the input field, and other cleanup
+    // when the planet creation is cancel
     $('#new-planet-cancel-btn').click( function() {
         $planetSelector.val( $planetSelector.children('option').first().val() );
 
         $dialog.modal('hide');
         $planetName.val('');
+
+        $spinner.css('display', 'none');
+        $ajaxMessage.text('');
+
         inhibitSendBtn();
     });
 
@@ -53,16 +62,85 @@ $(document).ready( function(){
 
     //on click, send a request to add a new planet through AJAX
     $sendBtn.click( function() {
+
+        $spinner.css('display', 'inline-block');
+        $ajaxMessage.text('attente d\'une réponse du serveur ...');
+
         $.post(
             '/planets/AJAXadd',
             { planetToCreate: $planetName.val() },
-            function (data, status) {
-                console.log("données reçues !");
-                console.log(data);
-                alert('statut : ' + status + "<br>Data: " + data.message)
-            },
+            handleValidAjaxResponse,
             'json'
-        );
+
+        // fail() allows to handle a failure of the request ...
+        ).fail( function() {
+            $ajaxMessage.text(
+                'Impossible de créer la planète pour l\'instant&nbsp;:' +
+                ' erreur de communication avec le serveur'
+            );
+
+        // we alwais need to hide the spinner after usage
+        }).always( function() {
+            $spinner.css('display', 'none');
+        });
     });
 
+
+    /***
+    * get back the server response for planet creation
+    *@param object data    awaited fields:
+    *                       see src/Controller/PlanetController.php::ajaxAddNew()
+    *                       (status, id, newPlanetList, message)
+    */
+    function handleValidAjaxResponse(data) {
+        switch (data.status) {
+            //planet creation ok, we've got a planet id and a planet list back
+            case 201:
+                //replace the planet selector options with the new ones
+                $planetSelector.html(
+                    generateOptionList(data.id, data.newPlanetList)
+                );
+                $dialog.modal('hide');
+                $ajaxMessage.text('');
+                $planetName.val('');
+                break;
+
+            //planet already exist
+            case 304:
+                $planetSelector.val(
+                    $planetSelector.children(
+                        'option[value="' + data.id + '"]'
+                    ).val()
+                );
+                $dialog.modal('hide');
+                $ajaxMessage.text('');
+                $planetName.val('');
+                break;
+
+            default:
+                $ajaxMessage.text(
+                    'code de retour «' + data.status +'» renvoyé par le serveur :' +
+                    "\n" + data.message
+                );
+        }
+    }
+
+    /***
+     * generate the html code for a list of options to stuff into
+     *      a <select> element. Each option will have its value and text content
+     *      given by an element of the array list
+     * @param selectedValue     the value of the option to mark as "selected"
+     * @param optionList        a list of arrays [ 'id', 'name' ]
+     * @returns {string}
+     */
+    function generateOptionList(selectedValue, optionList) {
+        var result = '';
+
+        for(let option of optionList ) {
+            selected = (selectedValue == option.id) ? 'selected' : '';
+            result += `<option value="${option.id}" ${selected}>${option.name}</option>\n`;
+        }
+
+        return result;
+    }
 })

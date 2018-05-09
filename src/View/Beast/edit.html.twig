@@ -1,5 +1,12 @@
 {% extends 'layout.html.twig' %}
 
+
+{% block stylesheet %}
+    {{ parent() }}
+  <link href="/assets/css/edition.css" rel="stylesheet">
+{% endblock %}
+
+
 {% block content %}
 <div class="row">
   <h1 class="col-12">Edit beast informations</h1>
