@@ -1,5 +1,5 @@
 /* these JS functions deal with the "create new planet" form  inside
-the "new beast" page and add some interactivity */
+the "new beast" page, the beast name input, and add some interactivity */
 
 $(document).ready( function(){
 
@@ -7,6 +7,10 @@ $(document).ready( function(){
     $dialog = $('#planet-creation-dialog');
     $planetName = $('#new-planet-name');
     $sendBtn = $('#new-planet-send-btn');
+
+    $beastName = $('#beast-name');
+    $beastWarning = $('#beast-warning');
+    $bigSendBtn = $('#global-send-btn');
 
     $spinner = $('#spinner');
     $ajaxMessage = $('#ajax-message');
@@ -18,8 +22,25 @@ $(document).ready( function(){
     }
 
 
+
+    //Prevent if the beast already exist
+    $beastName.keyup( function() {
+        str = $beastName.val();
+        if ( ( beastList.indexOf(str) != -1 )
+            && ( str != editedBeastName )
+        ) {
+            $beastWarning.text('this name is already taken!');
+            $bigSendBtn.attr('disabled', '');
+
+        } else {
+            $beastWarning.text('');
+            $bigSendBtn.removeAttr('disabled');
+        }
+    });
+
+
     //hide the dialog, clear the input field, and other cleanup
-    // when the planet creation is cancel
+    // when the planet creation is cancelled
     $('#new-planet-cancel-btn').click( function() {
         $planetSelector.val( $planetSelector.children('option').first().val() );
 

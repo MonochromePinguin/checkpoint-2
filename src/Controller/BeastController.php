@@ -204,6 +204,10 @@ class BeastController extends AbstractController
                     'messages' => $errors,
                     'planetList' => $planetList,
                     'movieList' => $movieList,
+                    'editedBeastName' => json_encode(
+                            ($beast === null) ? null : $beast->getName()
+                    ),
+                    'beastList' => json_encode($beastNames),
                     'datas' => $datas
                 ]
             );

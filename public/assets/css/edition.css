@@ -1,3 +1,7 @@
+input + span {
+    color: red;
+}
+
 
 input:invalid {
     background: hotpink;

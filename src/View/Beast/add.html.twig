@@ -41,5 +41,14 @@
 
 {% block javascript %}
     {{ parent() }}
+
+     {# datas send to client JS #}
+    <script>
+        {# edited beast name or null if none #}
+        editedBeastName = {{ editedBeastName|raw }};
+        {# for validating new names against existing ones #}
+        beastList = {{ beastList|raw }};
+    </script>
+
     <script src="/js/BeastEdition.js"></script>
 {% endblock %}

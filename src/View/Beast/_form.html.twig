@@ -3,10 +3,10 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="title">Name :</label>
-            <input type="text" class="form-control" name="name"
+            <input type="text" class="form-control" name="name" id="beast-name"
                    title="Beast name"
                    value="{{ datas.name }}"required>
-            <span></span>
+            <span id="beast-warning"></span>
         </div>
         <div class="form-group col-md-6">
             <label for="area">Area :</label>
@@ -56,7 +56,8 @@
     </div>
     <div class="form-row">
         <div class="form-group col-12">
-            <input type="submit" value="Valider" class="float-right">
+            <input type="submit" value="Valider" class="float-right"
+                   id="global-send-btn">
         </div>
     </div>
 </form>
