@@ -26,11 +26,10 @@
         </div>
         <div class="form-group col-md-6">
             <label for="size">Size (in meter):</label>
-            <input type="text" class="form-control" name="size" id="size"
-                   placeholder="Beast size in meter – any positive size"
-                   {# no type="number" attribute – the "pattern" attribute
-                      seems more flexible to me #}
-                   pattern="\d+((\.|,)\d+)?"
+{# TODO: sadly, the SQL schema use an INTEGER to store the size... #}
+            <input type="number" class="form-control" name="size" id="size"
+                   placeholder="Beast size in meter – any integer positive size"
+                   min="0"
                    value="{{ datas.size }}" required>
             <span></span>
         </div>
@@ -84,7 +83,8 @@
 
             <div class="modal-body">
                 <label>Nom&nbsp;:
-                    <input id="new-planet-name">
+                    <input id="new-planet-name" required
+                           title="entrez ici le nom de la nouvelle planète">
                 </label>
             </div>
 

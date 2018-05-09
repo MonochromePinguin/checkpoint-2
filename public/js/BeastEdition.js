@@ -1,3 +1,6 @@
+/* these JS functions deal with the "create new planet" form  inside
+the "new beast" page and add some interactivity */
+
 $(document).ready( function(){
     $planetSelector = $('#planet');
     $dialog = $('#planet-creation-dialog');
@@ -32,9 +35,9 @@ $(document).ready( function(){
 
 
     //show the planet creation dialog on **change** only ...
-//TODO: show it anytime the option is clicked ...
+//TODO: show it each time the option is clicked ...
     $planetSelector.change( function() {
-        //was the "nouvelle planète ..." option selected ?
+        //was the "nouvelle planète ..." option selected?
         $optId = $('#planet option:selected').attr('id');
 
         if ( $optId == 'option-create-new' ) {
@@ -50,11 +53,16 @@ $(document).ready( function(){
 
     //on click, send a request to add a new planet through AJAX
     $sendBtn.click( function() {
-         $.get( '/planets/ajax?createNew ' + $planetName.val(''),
-                function(data, status){
-            alert("Data: " + data + "\nStatus: " + status);
-        });
+        $.post(
+            '/planets/AJAXadd',
+            { planetToCreate: $planetName.val() },
+            function (data, status) {
+                console.log("données reçues !");
+                console.log(data);
+                alert('statut : ' + status + "<br>Data: " + data.message)
+            },
+            'json'
+        );
+    });
 
-
-    })
 })

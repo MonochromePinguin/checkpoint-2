@@ -23,8 +23,9 @@ class BeastController extends AbstractController
     public function list()
     {
         $beastManager = new BeastManager();
-        $beasts = $beastManager->selectAll();
         try {
+            $beasts = $beastManager->selectAll();
+
             return $this->twig->render('Beast/list.html.twig', ['beasts' => $beasts]);
         } catch (\Exception $e) {
             return \generateEmergencyPage(
@@ -46,17 +47,15 @@ class BeastController extends AbstractController
     public function details(int $id)
     {
         $beastManager = new BeastManager();
-        $beast = $beastManager->selectOneById($id);
 
         try {
-            return $this->twig->render(
-                'Beast/details.html.twig',
-                [ 'beast' => $beast ]
-            );
+            $beast = $beastManager->selectOneById($id);
+
+            return $this->twig->render('Beast/details.html.twig', [ 'beast' => $beast ]);
         } catch (\Exception $e) {
             return \generateEmergencyPage(
-                'Exception survenue pendant la génération de la page',
-                [$e->getMessage()]
+                'Erreur inattendue',
+                ['Une exception est survenue pendant la génération de la page', $e->getMessage()]
             );
         }
     }
@@ -68,8 +67,15 @@ class BeastController extends AbstractController
   */
     public function add()
     {
-        $planets = (new PlanetManager())->selectAll('name');
-        $movies = (new MovieManager())->selectAll('id');
+        try {
+            $planets = (new PlanetManager())->selectAll('name');
+            $movies = (new MovieManager())->selectAll('id');
+        } catch (\Exception $e) {
+            return \generateEmergencyPage(
+                'Erreur inattendue',
+                ['Une erreur relative à la base de données est survenue', $e->getMessage()]
+            );
+        }
 
         $errors = [];   #list of error messages to show in the page
         $errFlag = false;
@@ -84,6 +90,7 @@ class BeastController extends AbstractController
         ];
 
         if (isset($_POST) && ( 0 !== count($_POST))) {
+            #test the presence of each required field and fetch it
             foreach (static::REQUIRED_FIELDS_FOR_VALIDATION as $field) {
                 if (!isset($_POST[$field])) {
                     $errors[] = 'Champs « ' . $field . ' » manquant';
@@ -93,16 +100,21 @@ class BeastController extends AbstractController
                 }
             }
 
+            #basic validation
+            #
+            if (!$errFlag) {
+                if ( !is_numeric($datas['size']) || ( $datas['size'] <= 0)) {
+                    $errors[] = 'le champs «taille» doit être un nombre entier positif';
+                    $errFlag = true;
+                }
+            }
+
             if (!$errFlag) {
                 if (!self::validateId($datas['id_planet'], $planets)) {
                     $errors[] = 'Id de planète invalide';
                     $errFlag = true;
                 }
             }
-/*Pour commit : d'abord marcher avec une seule planète ...'
- on retrouve une liste de films, mais UN SEUL peut être inséré en SQL→ modifier
- la structure : Créer une table intermédiaire ... et le signaler ... Dans le code ...
-_ le select planète doit afficher «sélectionner ...» car test twig bogue avec tbl ?*/
 
             if (!$errFlag) {
                 if (!self::validateId($datas['id_movie'], $movies)) {
@@ -110,6 +122,7 @@ _ le select planète doit afficher «sélectionner ...» car test twig bogue ave
                     $errFlag = true;
                 }
             }
+
 
             if (!$errFlag) {
                 $beastManager = new BeastManager($planets, $movies);

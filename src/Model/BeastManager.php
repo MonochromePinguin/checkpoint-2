@@ -40,25 +40,4 @@ class BeastManager extends AbstractManager
 
         return $query->execute();
     }
-
-
-    /**
-     * insert a new record and returns its corresponding id
-     * @param array $values
-     * @return int|false    return the id of the new record in case of success,
-     *                          or false in case of failure
-     */
-    public function insertAndReturnId(array $values)
-    {
-        if (!$this->insert($values)) {
-            return false;
-        }
-
-
-        $query = $this->pdoConnection->query('SELECT LAST_INSERT_ID()');
-        $res = $query->fetch(\PDO::FETCH_NUM);
-
-        #we get back an array of int, but we asked only for one ...
-        return $res ?  $res[0] : false;
-    }
 }
