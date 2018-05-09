@@ -217,4 +217,19 @@ abstract class AbstractManager
 
         return $query->fetchAll(\PDO::FETCH_COLUMN, $prop);
     }
+
+
+    /**
+     * @param int $id   the id of the record to delete
+     * @return bool     success boolean
+     */
+    public function delete(int $id): bool
+    {
+        $query = $this->pdoConnection->prepare(
+            'DELETE FROM ' . static::TABLE . ' WHERE id = :id'
+        );
+        $query->bindValue(':id', $id, \PDO::PARAM_INT);
+
+        return $query->execute();
+    }
 }

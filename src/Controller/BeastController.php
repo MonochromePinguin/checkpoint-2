@@ -106,6 +106,32 @@ class BeastController extends AbstractController
         }
 
         if (isset($_POST) && ( 0 !== count($_POST))) {
+
+            #is that a delete request?
+            if (isset($_POST['delete'])) {
+                if (null === $id) {
+                    $errors[] = 'Ill-formed deletion request';
+                    $errFlag = true;
+
+                } else {
+                    try {
+                        $res = $beastManager->delete($id);
+                        if ($res) {
+                            header('Location: /beasts');
+                            exit;
+
+                        } else {
+                            $errors[] = 'Server-side deletion error';
+                            $errFlag = true;
+                        }
+
+                    } catch (\Exception $e) {
+                        $errors[] = $e->getMessage();
+                        $errFlag = true;
+                    }
+                }
+            }
+
             #test the presence of each required field and fetch it
             foreach (static::REQUIRED_FIELDS_FOR_VALIDATION as $field) {
                 if (!isset($_POST[$field])) {
