@@ -23,6 +23,7 @@ class BeastManager extends AbstractManager
         parent::__construct(self::TABLE);
     }
 
+//TODO: TRASH THIS FUNCTION TO USE THE GENERIC ABSTRACTMANAGER'S ONE ?
     public function insert(array $values): bool
     {
         $query = $this->pdoConnection->prepare(

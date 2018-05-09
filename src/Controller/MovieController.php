@@ -20,7 +20,7 @@ class MovieController extends AbstractController
         try {
             return $this->twig->render('Movie/list.html.twig', ['movies' => $movies]);
         } catch (\Exception $e) {
-            return \generateEmergencyPage('Erreur inattendue', ['Une exception est survenue pendant la génération de la page', $e->getMessage()]);
+            return \generateEmergencyPage('unexpected error', ['Exception raised while generating page', $e->getMessage()]);
         }
     }
 }

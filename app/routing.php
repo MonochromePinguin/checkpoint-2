@@ -26,5 +26,5 @@ $routes = [
   ],
   'Movie' => [ // Controller
     ['list', '/movies', 'GET'], // action, url, method
-  ],
+  ]
 ];

@@ -105,15 +105,25 @@ class Beast
         return $this->area;
     }
 
+    public function getIdMovie(): int
+    {
+        return $this->id_movie;
+    }
+
     public function getMovieTitle(): string
     {
         $movie = static::$movies[$this->id_movie];
-        return ($movie) ? $movie->getTitle() : 'Index de film erroné : ' . $this->id_movie;
+        return ($movie) ? $movie->getTitle() : 'Bad movie indice: ' . $this->id_movie;
+    }
+
+    public function getIdPlanet(): int
+    {
+        return $this->id_planet;
     }
 
     public function getPlanetName(): string
     {
         $planet = static::$planets[$this->id_planet];
-        return ($planet) ? $planet->getName() : 'Index de planète erroné : ' . $this->id_planet;
+        return ($planet) ? $planet->getName() : 'Bad planet indice: ' . $this->id_planet;
     }
 }

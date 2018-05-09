@@ -30,7 +30,7 @@ class PlanetController extends AbstractController
             || empty($_POST['planetToCreate'])
         ) {
             header('Content-Type: application/json');
-            echo json_encode([ 'status' => 404, 'message' => 'requête mal formée' ]);
+            echo json_encode([ 'status' => 404, 'message' => 'ill-formed request' ]);
             exit;
         }
 
@@ -48,7 +48,7 @@ class PlanetController extends AbstractController
                 #planet already there: returns its id
                 $response['id'] = $id[0];
                 $response['status'] = 304;
-                $response['message'] = 'La planète demandée existe déjà';
+                $response['message'] = 'This planet already exist';
 
                 header('Content-Type: application/json');
                 echo json_encode($response);
@@ -57,11 +57,11 @@ class PlanetController extends AbstractController
 
             $id = $planetManager->insertAndReturnId([ 'name' => $name ]);
             $res = array_map(
-                function($planet) {
-                   return [
+                function ($planet) {
+                    return [
                        'id' => $planet->getId(),
                        'name' => $planet->getName()
-                   ];
+                    ];
                 },
                 $planetManager->selectAll('name')
             );
@@ -75,12 +75,12 @@ class PlanetController extends AbstractController
                 $response['newPlanetList'] = $res;
             } else {
                 #planet creation not successful: return an error code
-                $response['message'] = 'Erreur interne au serveur lors de la création de la planète';
+                $response['message'] = 'internal server error while creating planet';
                 $response['status'] = 500;
             }
         } catch (\Exception $e) {
             $response['status'] = 500;
-            $response['message'] = 'Erreur interne au serveur, en relation avec la base de donnée&nbsp;: ' . $e->getMessage();
+            $response['message'] = 'Internal server error, related to the database: ' . $e->getMessage();
         }
 
         #send back the result:
@@ -105,8 +105,8 @@ class PlanetController extends AbstractController
             return $this->twig->render('Planet/list.html.twig', ['planets' => $planets]);
         } catch (\Exception $e) {
             return \generateEmergencyPage(
-                'Erreur inattendue',
-                ['Une exception est survenue pendant la génération de la page', $e->getMessage()]
+                'inexpected error',
+                ['Exception raised while generating page', $e->getMessage()]
             );
         }
     }

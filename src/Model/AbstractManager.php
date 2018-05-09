@@ -68,58 +68,100 @@ abstract class AbstractManager
 
     /**
      * generic insert method – INSERT the datas in a new record
-     * @param array $values     assoc array as column=>value pair
+     * @param array $values assoc array as column=>value pair
      * @return bool
+     * @throws \Exception
      */
     public function insert(array $values): bool
     {
         $keys = array_keys($values);
 
         #escaped name of columns
-        $columns = array_map(
-            function ($str) {
-                    return '`' . substr($this->pdoConnection->quote($str), 1, -1) . '`';
-            },
-            $keys
-        );
+        $columns = array_map(function ($str) {
+            return '`' . substr($this->pdoConnection->quote($str), 1, -1) . '`';
+        }, $keys);
 
         #text for bindings
-        $bindings = array_map(
-            function ($str) {
-                    return ':' . $str;
-            },
-            $keys
-        );
+        $bindings = array_map(function ($str) {
+            return ':' . $str;
+        }, $keys);
 
         $query = $this->pdoConnection->prepare(
-            'INSERT INTO ' . static::TABLE
-            . ' ( ' . implode(', ', $columns) . ' ) VALUES ( '
-            . implode(', ', $bindings) . ' )'
+            'INSERT INTO ' . static::TABLE . ' ( ' . implode(', ', $columns) . ' ) VALUES ( ' . implode(', ', $bindings) . ' )'
         );
 
         #bind each data to its placeholder
         foreach ($values as $key => $value) {
-            #determine the data type for PDO
-            switch (gettype($value)) {
-                case 'integer':
-                    $dataType = \PDO::PARAM_INT;
-                    break;
-                case 'string':
-                    $dataType = \PDO::PARAM_STR;
-                    break;
-                case 'boolean':
-                    $dataType = \PDO::PARAM_BOOL;
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unplanned type "' . gettype($value) . '" used in generic method AbstractManager::insert()'
-                    );
-            }
-
-            $query->bindValue(':' . $key, $value, $dataType);
+             $query->bindValue(':' . $key, $value, self::getPdoDataType($value));
         }
 
         return $query->execute();
+    }
+
+
+    /**
+     * generic update method – UPDATE the datas in a new record
+     * @param int $id   id of the record to update
+     * @param array $datas assoc array as column=>value pair
+     * @return bool
+     * @throws \Exception
+     */
+    public function update(int $id, array $datas): bool
+    {
+        $bindings = '';
+
+        #these two indexed arrays are related – used to bind the variables
+        $bindValue = [];
+        $pdoDataType = [];
+
+        #used in the generation of these previous two arrays
+        $i = 0;
+
+        #generate "column name = value binding" pairs
+        # as well as the $escapedKeys[] and $pdoDataType[] indexed arrays
+        foreach ($datas as $key => $value) {
+            $bindValue[$i] = $value;
+            $pdoDataType[$i] = self::getPdoDataType($value);
+
+            $bindings .=  ' `' . substr($this->pdoConnection->quote($key), 1, -1) . '` = ?,';
+            ++$i;
+        }
+        #delete the last surnumerary colon
+        $bindings[ strlen($bindings) -1] = ' ';
+
+        $query = $this->pdoConnection->prepare(
+            'UPDATE ' . static::TABLE . ' SET ' . $bindings . ' WHERE id = ?'
+        );
+
+        #bind each data to its placeholder
+        for ($c = 0; $c < $i; ++$c) {
+            $query->bindValue($c+1, $bindValue[$c], $pdoDataType[$c]);
+        }
+
+        $query->bindValue($i+1, $id, \PDO::PARAM_INT);
+
+        return $query->execute();
+    }
+
+
+    /**
+     *determine the data type for use in PDO
+     * @param $value
+     * @return int
+     * @throws \Exception
+     */
+    private static function getPdoDataType($value): int
+    {
+        switch (gettype($value)) {
+            case 'integer':
+                return \PDO::PARAM_INT;
+            case 'string':
+                return \PDO::PARAM_STR;
+            case 'boolean':
+                return \PDO::PARAM_BOOL;
+            default:
+                throw new \Exception('Unplanned type "' . gettype($value) . '" used in a generic method of AbstractManager');
+        }
     }
 
 
