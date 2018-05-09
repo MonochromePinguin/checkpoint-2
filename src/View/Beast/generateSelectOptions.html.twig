@@ -7,7 +7,7 @@
 #}
 {% block generateSelectOptions %}
     <option disabled {% if selectedEntry is null %}selected{% endif %}>
-        Choisir {{ invite }} ...
+        Select {{ invite }} ...
     </option>
 
     {% for entry in list %}
@@ -17,7 +17,7 @@
     {% endfor %}
 
     {% if inviteCreate is not null %}
-        <option value="créer..." id="option-create-new">
+        <option value="create..." id="option-create-new">
             {{ inviteCreate }}
         </option>
     {% endif %}

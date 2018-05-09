@@ -1,5 +1,5 @@
 
-<form method="post">
+<form method="post" action="">
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="title">Name :</label>
@@ -39,7 +39,7 @@
             <label for="planet">Planet :</label>
             <select name="id_planet" class="custom-select" id="planet"
                     title="Planet the beast originate from" required>
-                {% set invite, selectedEntry, list, inviteCreate = 'une planète', datas.id_planet, planetList, 'Nouvelle planète ...' %}
+                {% set invite, selectedEntry, list, inviteCreate = 'a planet', datas.id_planet, planetList, 'New planet ...' %}
                 {% include 'Beast/generateSelectOptions.html.twig' %}
             </select>
         </div>
@@ -49,7 +49,7 @@
 {# TODO: IN A FUTURE VERSION, THIS SHOULD SUPPORT MULTIPLE MOVIES #}
                     title="1st movie the beast in encountered"
                     required>
-                {% set invite, selectedEntry, list, inviteCreate = 'un film', datas.id_movie, movieList, null %}
+                {% set invite, selectedEntry, list, inviteCreate = 'a movie', datas.id_movie, movieList, null %}
                 {% include 'Beast/generateSelectOptions.html.twig' %}
             </select>
         </div>
