@@ -10,9 +10,9 @@ function generateEmergencyPage(string $title, array $messages) : string
 {
     $ret = <<< EOP
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
   <head>
-	<title>Quelque chose de pas normal s'est passé</title>
+	<title>Something wrong occured</title>
 	<meta charset="UTF-8">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,7 +24,8 @@ function generateEmergencyPage(string $title, array $messages) : string
 	    main { text-align: center }
 	    .error {
 	        color: red;
-	        font-style: italic bold;
+	        font-style: italic;
+	        font-weight: bold;
 	        border: 1px solid darkred;
 	        border-radius: 1rem;
 	        margin: 5vw;
@@ -36,7 +37,7 @@ function generateEmergencyPage(string $title, array $messages) : string
   <body>
     <header>
         <h1>{$title}</h1>
-        <h2>Les messages d'erreur suivants ont été renvoyés&nbsp;:</h2>
+        <h2>The following error messages have been sent:</h2>
     </header>
 
     <main>
